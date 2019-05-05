@@ -11,7 +11,7 @@ node {
     def rtGradle = Artifactory.newGradleBuild()
     def buildInfo
 
-    stage ('Clone') {
+    stage ('Clone TEST') {
         git url: 'https://github.com/FarouqMousa/devops-webapp-demo.git'
     }
 
