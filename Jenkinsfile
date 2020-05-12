@@ -1,7 +1,7 @@
 //START-OF-SCRIPT
 node {
     def server = Artifactory.server 'artifactory'
-    
+    def SONARQUBE_HOSTNAME = 'sonarqube'
     withCredentials([usernamePassword(credentialsId: 'artifactory',
                      usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
         server.username = "${USERNAME}"
