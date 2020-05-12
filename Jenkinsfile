@@ -2,6 +2,8 @@
 node {
     def server = Artifactory.server 'artifactory'
     def SONARQUBE_HOSTNAME = 'sonarqube'
+    def JIRA_SITE_NAME = 'jira'
+    def JIRA_PROJ_NAME = 'SKYNET'
   
     withCredentials([usernamePassword(credentialsId: 'artifactory',
                      usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
@@ -39,6 +41,20 @@ node {
       withCredentials([string(credentialsId: 'sonar', variable: 'sonarLogin')]) {
         sh "${sonarqubeScannerHome}/bin/sonar-scanner -e -Dsonar.host.url=http://${SONARQUBE_HOSTNAME}:9000 -Dsonar.login=${sonarLogin} -Dsonar.projectName=WebApp -Dsonar.projectVersion=${env.BUILD_NUMBER} -Dsonar.projectKey=GS -Dsonar.sources=src/main/ -Dsonar.tests=src/test/ -Dsonar.java.binaries=build/**/* -Dsonar.language=java"
       }
+    }
+    
+    stage('Raise JiraIssue') {
+        def issue = [fields: [ project: [key: JIRA_PROJ_NAME],
+                       summary: 'New JIRA Created from Jenkins.',
+                       description: 'New JIRA Created from Jenkins.',
+                       issuetype: [name: 'Task']]]
+        
+        def newIssue = jiraNewIssue issue: issue, site: JIRA_SITE_NAME
+        
+        def newIssueId = newIssue.data.key
+        echo newIssueId
+        
+        def attachment1 = jiraUploadAttachment site: JIRA_SITE_NAME, idOrKey: newIssueId, file: "gradle.build.${BUILD_NUMBER}.log"
     }
 }
 //END-OF-SCRIPT
