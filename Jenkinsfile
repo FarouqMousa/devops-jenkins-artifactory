@@ -11,12 +11,12 @@ node {
     def rtGradle = Artifactory.newGradleBuild()
     def buildInfo
 
-    stage ('Clone TEST') {
-        git url: 'https://github.com/FarouqMousa/devops-webapp-demo.git'
+    stage ('Clone') {
+        git url: 'https://github.com/cloudacademy/devops-webapp.git'
     }
 
     stage ('Artifactory Configuration') {
-        rtGradle.tool = "gradle-4.10.2" // Tool name from Jenkins configuration
+        rtGradle.tool = "gradle-5.6.4" // Tool name from Jenkins configuration
         rtGradle.deployer repo: 'gradle-release-local', server: server
         rtGradle.resolver repo: 'jcenter', server: server
     }
