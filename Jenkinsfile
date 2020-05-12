@@ -4,6 +4,10 @@ node {
     def SONARQUBE_HOSTNAME = 'sonarqube'
     def JIRA_SITE_NAME = 'jira'
     def JIRA_PROJ_NAME = 'SKYNET'
+    
+    def GRADLE_HOME = tool name: 'gradle-4.10.2'
+    def REPO_URL = 'https://github.com/cloudacademy/devops-webapp.git'
+    def DOCKERHUB_REPO = 'cloudacademydevops/webapp'
   
     withCredentials([usernamePassword(credentialsId: 'artifactory',
                      usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
@@ -34,6 +38,11 @@ node {
 
     stage ('Artifactory Publish Build Info') {
         server.publishBuildInfo buildInfo
+    }
+    
+    stage('Build with Gradle 4.10.2') {
+        sh "${GRADLE_HOME}/bin/gradle build --info 2>&1 | tee gradle.build.${BUILD_NUMBER}.log"
+        sh "ls -la build/libs/*.war"
     }
     
     stage('sonar-scanner') {
