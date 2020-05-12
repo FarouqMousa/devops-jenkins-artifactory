@@ -6,7 +6,7 @@ services:
    #image: jenkins:latest
     image: jenkins/jenkins:lts
     networks:
-      - cloudacademylabs
+      - labs
     ports:
       - "8080:8080"
     environment:
@@ -18,7 +18,7 @@ services:
     #image: alpine/socat:latest
     image: alpine/socat:latest
     networks:
-      - cloudacademylabs
+      - labs
     command: tcp-listen:2375,fork,reuseaddr unix-connect:/var/run/docker.sock
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
@@ -29,7 +29,7 @@ services:
     image: postgres:latest
     #image: postgres:9.6
     networks:
-      - cloudacademylabs
+      - labs
     environment:
       - POSTGRES_DB=artifactory
       # The following must match the DB_USER and DB_PASSWORD values passed to Artifactory
@@ -45,7 +45,7 @@ services:
   # image: pivotalservices/artifactory-resource:latest
     image: docker.bintray.io/jfrog/artifactory-oss:6.5.3    
     networks:
-      - cloudacademylabs
+      - labs
     ports:
       - 8081:8081
     environment:
@@ -65,5 +65,5 @@ services:
         hard: 40000
 
 networks:
-  cloudacademylabs:
-    name: cloudacademylabs
+  labs:
+    name: labs
